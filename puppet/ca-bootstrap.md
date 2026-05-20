@@ -12,7 +12,7 @@ CA-A files are preserved at /etc/puppet/puppetserver/ca.CA-A.preserved/ for refe
 | Valid | 2026-05-09 to 2031-05-09 |
 | CA directory | /etc/puppetlabs/puppetserver/ca/ |
 | CA public cert | /etc/puppetlabs/puppetserver/ca/ca_crt.pem |
-| CA private key | /etc/puppetlabs/puppetserver/ca/ca_key.pem (do not commit) |
+| CA private key | /etc/puppetlabs/puppetserver/ca/ca_key.pem |
 | CRL | /etc/puppetlabs/puppetserver/ca/ca_crl.pem |
 | Signed certs | /etc/puppetlabs/puppetserver/ca/signed/ |
 | Inventory | /etc/puppetlabs/puppetserver/ca/inventory.txt |
