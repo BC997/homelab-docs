@@ -22,7 +22,7 @@ Managed by Puppet via profile::nfs_media:
 
     10.0.0.35:/volume1/PlexMediaServer /mnt/nas/plexmediaserver nfs rw,defaults,_netdev,vers=3 0 0
 
-### qby (10.0.0.147)
+### RBT (10.0.0.147)
 Manually managed — not in Puppet:
 
     10.0.0.35:/volume1/PlexMediaServer /mnt/nas/plexmediaserver nfs defaults,_netdev,nofail,x-systemd.automount 0 0
