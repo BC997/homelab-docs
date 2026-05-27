@@ -1,11 +1,9 @@
 # Docker Architecture: As-Built Reference
-
 ## Host
-
 | Property | Value |
 |---|---|
 | Hostname | cli-docker.lab.local |
-| IP | 10.0.0.3 |
+| IP | 10.0.0.80 |
 | Proxmox node | Dessert |
 | VM ID | 110 |
 | OS | Ubuntu 22.04 |
@@ -15,13 +13,11 @@
 | Disk | 64G |
 
 ## Overview
-
 cli-docker is the primary Docker host for the lab. All compose stacks live under
 ~/docker/ and are managed via Docker Compose. Watchtower handles automatic container
-updates. Puppet manages system-level config on this host but does not manage containers.
+updates. Puppet manages system-level config and several compose stacks on this host.
 
 ## Container inventory
-
 | Container | Image | Port(s) | Purpose |
 |---|---|---|---|
 | npm | jc21/nginx-proxy-manager | 80, 81, 443 | Reverse proxy, SSL termination |
@@ -38,19 +34,20 @@ updates. Puppet manages system-level config on this host but does not manage con
 | pve-exporter | prompve/prometheus-pve-exporter | 9221 | Proxmox metrics exporter |
 | audiobookshelf | ghcr.io/advplyr/audiobookshelf | 90 | Audiobook server |
 | gitea | gitea/gitea | 3001, 2222 | Self-hosted git |
+| tautulli | ghcr.io/tautulli/tautulli | 8181 | Plex analytics and notifications |
+| seerr | ghcr.io/seerr-team/seerr | 5055 | Media request management |
 
 ## Watchtower
-
 Watchtower polls for updated container images and restarts containers automatically.
 It manages all containers on cli-docker. No manual image updates needed.
 
 ## Puppet on cli-docker
-
 cli-docker runs the Puppet agent and is assigned role::standard_server.
 Certname: cli-docker.lab.local (serial s3, signed by CA-C).
-Puppet manages system-level config only — not containers.
+Puppet manages system-level config and renders compose files for several services
+via profiles: profile::arr_stack, profile::tautulli, profile::seerr, profile::pihole_env,
+profile::prometheus_env, profile::nfs_media.
 
 ## Gitea
-
 Self-hosted Gitea runs as a container on cli-docker (port 3001).
 Accessible at http://gitea.lab.local:3001.
