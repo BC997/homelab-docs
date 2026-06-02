@@ -30,7 +30,8 @@ Both records are A records pointing to the home WAN IP. DNS only (no Cloudflare 
 |---|---|---|
 | 443 | HTTPS | NPM (10.0.0.3:443) |
 
-Port 80 is closed. Port 32400 (Plex relay) is closed.
+Port 80 is closed. Port 32400 is closed — external Plex access is via NPM on 443 only.
+DuckDNS was previously used for dynamic DNS and has been fully removed in favour of Cloudflare.
 
 ## Nginx Proxy Manager
 
