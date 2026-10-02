@@ -18,8 +18,8 @@ Plex moved from a desktop Ubuntu VM to this headless server VM to cut overhead a
 |---|---|
 | Share | <NAS_IP>:/volume1/PlexMediaServer |
 | Mount point | /mnt/nas/plexmediaserver |
-| Mode | Read only |
-| Managed by | profile::nfs_media |
+| Mode | Read and write, so media can be removed from inside Plex |
+| Managed by | profile::plex |
 
 ## Install and APT repo
 

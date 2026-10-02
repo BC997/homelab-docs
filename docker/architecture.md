@@ -39,7 +39,7 @@ cli-docker is the main Docker host. Compose stacks live under `~/docker/`. Puppe
 
 ## Puppet on cli-docker
 
-cli-docker runs the agent with `role::standard_server` plus service profiles, including `profile::docker`, `profile::arr_stack`, `profile::seerr`, `profile::tautulli`, `profile::pihole_env`, `profile::prometheus_env`, and `profile::nfs_media`, plus a Vaultwarden profile. Secrets for these profiles live in the node's eyaml file.
+cli-docker runs the agent with `role::standard_server` plus service profiles, including `profile::docker`, `profile::arr_stack`, `profile::seerr`, `profile::tautulli`, `profile::pihole_env`, `profile::prometheus_env`, and `profile::nfs_media`. Secrets for these profiles live in the node's eyaml file.
 
 ## Pi-hole and NPM port note
 

@@ -8,7 +8,7 @@ The lab closes the gap between knowing how enterprise infrastructure works and a
 
 ## What's in it
 
-The lab runs on a four node Proxmox 8 cluster. Configuration is managed by OpenVox 8, the community fork of Open Source Puppet, with a role and profile structure, Hiera data separation, r10k for environment deploys, and eyaml for secrets. OpenVoxDB and PuppetBoard give visibility into facts, catalogs, reports, and drift across the fleet. Gitea is the self hosted source of truth, and this GitHub repo is a sanitized snapshot of it.
+The lab runs on a four node Proxmox 8 cluster. Configuration is managed by OpenVox 8, the community fork of Open Source Puppet, with a role and profile structure, Hiera data separation, r10k for environment deploys, and eyaml for secrets. OpenVoxDB and PuppetBoard give visibility into facts, catalogs, reports, and drift across the fleet. Gitea is the self hosted source of truth, and this GitHub repo is a sanitized snapshot of it. The configuration code itself is published in [homelab-openvox](https://github.com/BC997/homelab-openvox).
 
 Networking runs on a UniFi UDM SE with a segmented IoT VLAN and a single reverse proxy entry point using DNS validated TLS certificates.
 
@@ -26,7 +26,7 @@ Since the last snapshot the lab went through several large changes.
 * **Shrank the cluster from five nodes to four.** Removed one node cleanly, moved its workloads, and repurposed the hardware as a standalone workstation.
 * **Standardized fleet behavior in code.** Pacific timezone, a Hiera controlled nightly reboot window with per node opt out, and aligned Proxmox update timers.
 * **Made VMs portable.** HA managed VMs now use the shared bridge so they can move between nodes.
-* **Added services.** Vaultwarden, Seerr, Tautulli, Bazarr, and Cloudflare DDNS, each managed through Puppet code.
+* **Added services.** Seerr, Tautulli, and Bazarr as Puppet managed compose stacks, plus Vaultwarden and Cloudflare DDNS.
 
 ## Roadmap
 

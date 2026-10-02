@@ -47,7 +47,7 @@ Every node gets exactly one role. Roles compose profiles. Profiles manage resour
 | Role | Assigned to | Profiles |
 |---|---|---|
 | role::standard_server | openvox-cli, cli-docker, node default | profile::base |
-| role::media_server | plex-cli | profile::base, profile::plex, profile::nfs_media |
+| role::media_server | plex-cli | profile::base, profile::plex |
 
 cli-docker also includes service profiles that render its compose stacks (see `docker/architecture.md`).
 
@@ -56,6 +56,8 @@ cli-docker also includes service profiles that render its compose stacks (see `d
 Applied everywhere. Highlights:
 
 * Base packages including qemu-guest-agent
+* SSH hardening, fail2ban, and auditd
+* ufw with default deny inbound, LAN allowed, and per node exceptions from Hiera
 * Node Exporter for Prometheus
 * Timezone set to America/Los_Angeles with an idempotent exec guarded by `unless`, so cron schedules mean the same thing on every host
 * Agent and OpenVoxDB client config, parameterized so a node can point at a different server through Hiera

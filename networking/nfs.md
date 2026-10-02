@@ -2,7 +2,7 @@
 
 ## Overview
 
-A Synology DS923+ hosts the media share over NFS. Plex reads from it, and the cli-docker arr stack writes to it.
+A Synology DS923+ hosts the media share over NFS. Plex serves from it, and the cli-docker arr stack writes to it.
 
 ## Share
 
@@ -15,12 +15,12 @@ A Synology DS923+ hosts the media share over NFS. Plex reads from it, and the cl
 
 ## Mounts
 
-Both mounts are managed by Puppet through `profile::nfs_media`.
+Both mounts are managed by Puppet.
 
-| Host | Access |
-|---|---|
-| cli-docker | Read and write |
-| plex-cli | Read only |
+| Host | Access | Profile |
+|---|---|---|
+| cli-docker | Read and write | profile::nfs_media |
+| plex-cli | Read and write, so media can be removed from inside Plex | profile::plex |
 
 cli-docker fstab entry rendered by Puppet:
 
