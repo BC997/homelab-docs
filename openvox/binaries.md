@@ -7,6 +7,7 @@ Paths are unchanged from Open Source Puppet. Use full paths with sudo.
 | puppet agent | /opt/puppetlabs/bin/puppet |
 | r10k | /opt/puppetlabs/puppet/bin/r10k |
 | eyaml | /opt/puppetlabs/puppet/bin/eyaml |
+| puppetserver | /opt/puppetlabs/bin/puppetserver |
 
 ## Common commands
 
@@ -28,11 +29,11 @@ Deploy:
 
 List certs on the primary:
 
-    sudo puppetserver ca list --all
+    sudo /opt/puppetlabs/bin/puppetserver ca list --all
 
 Clean a cert on the primary (`puppet cert` no longer exists in version 8):
 
-    sudo puppetserver ca clean --certname <certname>
+    sudo /opt/puppetlabs/bin/puppetserver ca clean --certname <certname>
 
 Check root cron on any host:
 

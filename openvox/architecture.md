@@ -65,7 +65,7 @@ Applied everywhere. Highlights:
 
 ### Nightly reboot
 
-The reboot window lives in Hiera. Nodes that must stay up opt out per node:
+The reboot window lives in Hiera. Nodes that must stay up, like the primary, opt out per node:
 
     profile::base::manage_nightly_reboot: false
 

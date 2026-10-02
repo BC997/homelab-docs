@@ -28,7 +28,7 @@ Skipping step 6 does not fail loudly. The node falls through to `node default` a
 
 On the primary:
 
-    sudo puppetserver ca clean --certname <certname>
+    sudo /opt/puppetlabs/bin/puppetserver ca clean --certname <certname>
 
 On the agent, clear SSL state and run again:
 

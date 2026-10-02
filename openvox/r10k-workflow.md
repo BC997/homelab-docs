@@ -11,6 +11,10 @@
 | Deploy path | /etc/puppet/code/environments/production/ |
 | Working clone | ~/repos/homelab-puppet on openvox-cli |
 
+## Deploys are manual on purpose
+
+r10k has no cron or timer. Every deploy is run by hand so each change gets a noop review before it reaches the fleet. Drift correction does not depend on r10k: agents still enforce the deployed code every 30 minutes.
+
 ## Change workflow
 
 Every change follows the same path. Output is reviewed at each step before moving on.
