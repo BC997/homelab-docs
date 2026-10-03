@@ -39,3 +39,15 @@ Pi-hole Local DNS records are not managed by Puppet. A new VM without a record f
 * Validate by hand before trusting automation
 * Delay cleanup, like revoking old credentials, until several automated cycles succeed
 * You cannot shrink a mounted root partition from the running OS. Boot a live USB.
+
+## Reading corosync link drops
+
+When a node really goes down, every peer logs it at the same moment. When only one peer logs a drop and the others do not, the cause is a short blip on the network between that pair, not a dead node. Counting drops by day and by peer, then by hour, separates maintenance windows, scheduled jobs, and real network trouble before anything gets changed.
+
+## Find every user of a credential before revoking it
+
+The old Gitea token was assumed to belong to one service. An audit showed two other things on the primary used the same token: r10k, and the working clone through its git remote address. Each one was moved to its own SSH key and tested first. Revoking it then broke nothing. A one way change like a revocation comes last.
+
+## A VPN client can block LAN DNS on purpose
+
+A workstation could reach every lab host but could not resolve lab names. The VPN client's firewall had explicit rules dropping DNS to private address ranges, a leak protection that its LAN settings do not override. Lab names were moved into the workstation's hosts file instead of weakening the VPN. See `networking/workstation-dns.md`.

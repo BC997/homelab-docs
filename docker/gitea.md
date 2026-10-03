@@ -22,9 +22,11 @@ A separate `homelab-ansible` repo is planned so Ansible stays outside the r10k d
 
 ## r10k integration
 
-r10k on openvox-cli pulls the production branch of homelab-puppet and deploys it to `/etc/puppet/code/environments/production/`. Today it authenticates with an HTTP token stored in eyaml. Moving to an SSH deploy key is on the roadmap.
+r10k on openvox-cli pulls the production branch of homelab-puppet over SSH (port 2222) and deploys it to `/etc/puppet/code/environments/production/`. It uses a read only deploy key that only reaches that one repo.
 
-Day to day edits happen in a normal user clone at `~/repos/homelab-puppet` on openvox-cli, not in the deploy path.
+Day to day edits happen in a normal user clone at `~/repos/homelab-puppet` on openvox-cli, not in the deploy path. That clone pushes over SSH with its own key.
+
+The Gitea account has no access tokens. The last one was retired in October 2026, after an audit found every place that used it and moved each one to SSH first.
 
 ## GitHub snapshot
 

@@ -29,11 +29,11 @@ The cluster ran five nodes until September 2026. The fifth node was removed clea
 | 110 | cli-docker | Cupcake | Docker host |
 | 112 | HAOS | Butternut | Home Assistant OS |
 
-Templates and lab utility VMs are not listed.
+Other lab VMs are not listed. No VM templates exist right now. Rebuilding a cloud init template is on the roadmap.
 
 ## Networking
 
-HA managed VMs attach to `vmbr0`, which exists on every node, so they can migrate freely. plex-cli intentionally stays on a bridge tied to Dessert's hardware and is not expected to move.
+Every node has exactly one bridge, `vmbr0`, and every VM attaches to it. Any VM can run on any node.
 
 For live network changes on a node, `ifreload -a` is used instead of a full networking restart. It is lower risk for VMs that depend on the bridge.
 
@@ -67,3 +67,7 @@ Shared NFS storage on a Synology NAS backs HA managed VM disks so they can move 
 * `pvecm status` for quorum and membership
 * `ha-manager status` for HA state
 * `journalctl --no-pager | cat` on each node, then compare timestamps across nodes to tell a single node event from a fleet wide one
+
+## Watch items
+
+All four nodes use the same Intel e1000e NIC model. An October 2026 audit found zero error counters and zero transmit hangs on every node. Corosync still logs short drops between single pairs of nodes, spread across all hours of the day. Hardware and scheduled jobs were ruled out, which points to traffic spikes on the shared LAN. The long term fix is a dedicated second corosync link.

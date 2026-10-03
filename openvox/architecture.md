@@ -49,7 +49,7 @@ Every node gets exactly one role. Roles compose profiles. Profiles manage resour
 | role::standard_server | openvox-cli, cli-docker, node default | profile::base |
 | role::media_server | plex-cli | profile::base, profile::plex |
 
-cli-docker also includes service profiles that render its compose stacks (see `docker/architecture.md`).
+cli-docker also includes service profiles that render its compose stacks (see `docker/architecture.md`). openvox-cli adds `profile::openvox_primary`, which enforces the server and PuppetBoard fixes (see `puppetboard-fixes.md`).
 
 ### profile::base
 
@@ -62,6 +62,7 @@ Applied everywhere. Highlights:
 * Timezone set to America/Los_Angeles with an idempotent exec guarded by `unless`, so cron schedules mean the same thing on every host
 * Agent and OpenVoxDB client config, parameterized so a node can point at a different server through Hiera
 * Nightly reboot cron, scheduled and toggled through Hiera
+* Time sync: `systemd-timesyncd` kept enabled and running
 
 ### Nightly reboot
 

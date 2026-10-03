@@ -10,6 +10,8 @@
 | Source | homelab-puppet on self hosted Gitea, production branch |
 | Deploy path | /etc/puppet/code/environments/production/ |
 | Working clone | ~/repos/homelab-puppet on openvox-cli |
+| r10k auth | Read only SSH deploy key, scoped to this one repo |
+| Push auth | Separate SSH key on the Gitea account |
 
 ## Deploys are manual on purpose
 

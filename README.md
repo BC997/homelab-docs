@@ -27,11 +27,16 @@ Since the last snapshot the lab went through several large changes.
 * **Standardized fleet behavior in code.** Pacific timezone, a Hiera controlled nightly reboot window with per node opt out, and aligned Proxmox update timers.
 * **Made VMs portable.** HA managed VMs now use the shared bridge so they can move between nodes.
 * **Added services.** Seerr, Tautulli, and Bazarr as Puppet managed compose stacks, plus Vaultwarden and Cloudflare DDNS.
+* **Made the primary heal itself.** The hand applied OpenVoxDB and PuppetBoard fixes are now enforced by a profile. An upgrade that undoes one gets repaired on the next agent run. Tested by breaking a fix on purpose. See `openvox/puppetboard-fixes.md`.
+* **Removed every access token.** r10k pulls with a read only SSH deploy key, edits push with their own SSH key, and the database moved off its default password. Every user of the old token was found and moved before it was revoked.
+* **Audited the cluster network.** Confirmed every node runs the NIC model behind the August outage, with zero errors and no repeat hangs. Traced a pattern of short corosync drops to shared LAN traffic rather than hardware. Every VM now sits on the shared bridge, so any VM can run on any node.
+* **Fixed lab DNS on a VPN workstation.** The VPN client deliberately drops DNS to the local network. Lab names now resolve through the hosts file instead of weakening the VPN. See `networking/workstation-dns.md`.
 
 ## Roadmap
 
-* Codify the hand applied PuppetBoard fixes so they survive upgrades and rebuilds
-* Move r10k from HTTP token auth to an SSH deploy key
+* Add CI to the code repo: lint, syntax check, YAML lint, and secret scanning on every push
+* Rebuild a cloud init VM template so new VMs no longer need a full install
+* Give corosync its own second network link, and alert on link drops in the meantime
 * Stand up Ansible alongside OpenVox for provisioning, Proxmox host management, and one off remediation, with OpenVox kept for ongoing state enforcement
 * Automate Pi-hole local DNS records, which are still a manual step
 
@@ -42,7 +47,7 @@ Since the last snapshot the lab went through several large changes.
 |---|---|
 | architecture.md | Primary host, code paths, Hiera hierarchy, roles and profiles, node classification |
 | migration.md | Open Source Puppet to OpenVox migration and the fixes it took |
-| puppetboard-fixes.md | PuppetBoard and server fixes applied after the migration |
+| puppetboard-fixes.md | Server and PuppetBoard fixes, now enforced and self healing |
 | r10k-workflow.md | Change workflow from edit to verified apply |
 | binaries.md | Binary paths and common commands |
 | ca-and-agent-bootstrap.md | Autosign allowlist, onboarding, and cert cleanup |
@@ -59,6 +64,7 @@ Since the last snapshot the lab went through several large changes.
 |---|---|
 | architecture.md | Gateway, networks, firewall rules, LAN host reference |
 | remote-access.md | NPM, Cloudflare DNS and DDNS, NAT loopback |
+| workstation-dns.md | Resolving lab names on a workstation whose VPN blocks LAN DNS |
 | nfs.md | NFS share, mounts, Synology permissions |
 
 ### docker/

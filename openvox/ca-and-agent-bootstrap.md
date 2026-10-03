@@ -8,13 +8,15 @@ The CA lives on the primary, openvox-cli. Every managed node received a new cert
 
 Autosign uses an explicit allowlist of certnames instead of a `*.lab.local` wildcard. A host that is not on the list submits a CSR and waits unsigned. That is intended. Nothing joins the fleet without being added on purpose.
 
+The list lives in Hiera (`profile::openvox_primary::autosign_certnames`), and Puppet writes autosign.conf from it. Editing autosign.conf by hand on the primary does not stick.
+
 ## Onboarding a new VM
 
-1. Set a DHCP reservation in UniFi
-2. Clone the Ubuntu Server template in Proxmox and attach it to vmbr0
+1. Create the VM with its NIC on vmbr0 and install Ubuntu Server 24.04. There is no template right now, and rebuilding one is on the roadmap.
+2. Set a DHCP reservation in UniFi
 3. Set the hostname so the certname is exact
-4. Add a Pi-hole Local DNS record for the new host (not Puppet managed, easy to forget)
-5. Add the certname to the autosign allowlist on the primary
+4. Add a Pi-hole Local DNS record, plus a line in the workstation's hosts file (see `networking/workstation-dns.md`)
+5. Add the certname to the autosign list in the primary's Hiera data, then commit, deploy, and run the agent on the primary
 6. If the VM needs more than the base profile, add a node block in site.pp through the normal workflow
 7. Run the agent on the new VM
 

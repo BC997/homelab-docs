@@ -14,7 +14,7 @@ The same keypair moved to the OpenVox primary, so no secrets had to be re encryp
 
 | File | Holds |
 |---|---|
-| data/common.eyaml | r10k Gitea token and other lab wide secrets |
+| data/common.eyaml | Lab wide secrets, such as the admin password hash |
 | data/nodes/cli-docker.lab.local.eyaml | Proxmox API password, Pi-hole password, Plex token for Tautulli |
 
 ## Encrypting a value
