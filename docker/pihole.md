@@ -44,6 +44,10 @@ List:
 | plex-cli.lab.local | 10.0.0.12 |
 | ha.<DOMAIN> | 10.0.0.11 |
 
+## Reboot window
+
+cli-docker reboots nightly at 4:30, which takes DNS down for the whole network for a couple of minutes. It runs 30 minutes ahead of the Plex host's 5:00 reboot, so DNS is back before anything else restarts. OpenVox agents don't need Pi-hole to reach the primary, since every node has the primary pinned in `/etc/hosts`.
+
 ## Drift risk
 
 Local DNS records are not managed by Puppet. Records for retired hosts linger and new hosts get missed. Records are audited by hand for now.

@@ -62,6 +62,7 @@ Applied everywhere. Highlights:
 * Timezone set to America/Los_Angeles with an idempotent exec guarded by `unless`, so cron schedules mean the same thing on every host
 * Agent and OpenVoxDB client config, parameterized so a node can point at a different server through Hiera
 * Nightly reboot cron, scheduled and toggled through Hiera
+* The primary's name pinned in `/etc/hosts` on every node, so agent runs don't depend on Pi-hole
 * Time sync: `systemd-timesyncd` kept enabled and running
 
 ### Nightly reboot
@@ -71,6 +72,15 @@ The reboot window lives in Hiera. Nodes that must stay up, like the primary, opt
     profile::base::manage_nightly_reboot: false
 
 The profile has an explicit `ensure => absent` branch for that flag. Simply not managing the cron when the flag is false would leave an already applied cron in place.
+
+The time is a Hiera setting too, 5:00 by default. The Docker host runs Pi-hole, so it reboots 30 minutes earlier, and DNS is back up before the Plex host restarts:
+
+    profile::base::nightly_reboot_hour: '4'
+    profile::base::nightly_reboot_minute: '30'
+
+### Agent runs and DNS
+
+Every node used to find the primary through Pi-hole. Agent runs that landed while the Docker host was rebooting failed with "Temporary failure in name resolution," and each one raised a failure alert. `base::dns` now adds the primary to `/etc/hosts` on every node with a `host` resource, so an agent run reaches the server whether Pi-hole is up or not. The name and address are Hiera parameters, defaulting to `openvox-cli.lab.local` and 10.0.0.10.
 
 ## Node classification gotcha
 
