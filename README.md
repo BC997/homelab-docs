@@ -8,7 +8,7 @@ The lab closes the gap between knowing how enterprise infrastructure works and a
 
 ## What's in it
 
-The lab runs on a four node Proxmox 8 cluster. Configuration is managed by OpenVox 8, the community fork of Open Source Puppet, with a role and profile structure, Hiera data separation, r10k for environment deploys, and eyaml for secrets. OpenVoxDB and PuppetBoard give visibility into facts, catalogs, reports, and drift across the fleet. Gitea is the self hosted source of truth, and this GitHub repo is a sanitized snapshot of it. The configuration code itself is published in [homelab-openvox](https://github.com/BC997/homelab-openvox).
+The lab runs on a four node Proxmox VE 9 cluster. Configuration is managed by OpenVox 8, the community fork of Open Source Puppet, with a role and profile structure, Hiera data separation, r10k for environment deploys, and eyaml for secrets. OpenVoxDB and PuppetBoard give visibility into facts, catalogs, reports, and drift across the fleet. Gitea is the self hosted source of truth, and this GitHub repo is a sanitized snapshot of it. The configuration code itself is published in [homelab-openvox](https://github.com/BC997/homelab-openvox).
 
 Networking runs on a UniFi UDM SE with a segmented IoT VLAN and a single reverse proxy entry point using DNS validated TLS certificates.
 
@@ -20,6 +20,10 @@ Home automation runs on Home Assistant OS with local integrations across securit
 
 Since the last snapshot the lab went through several large changes.
 
+* **Upgraded the cluster from Proxmox VE 8 to 9 with no downtime for core services.** All four nodes were on 8.4.0 from March 2025, about 239 packages behind and past end of life. A phased plan cleared an unused Ceph cluster, caught every node up to the last 8.4 release, pinned NIC names, then upgraded one node at a time to Debian 13 and Proxmox VE 9.2 on kernel 7.0, using HA maintenance mode so the OpenVox primary, Home Assistant and DNS moved live. See `proxmox/pve9-upgrade.md`.
+* **Made sure the nodes never fall behind again.** Debian security updates now install daily on every node, Proxmox updates follow a monthly playbook with a Home Assistant reminder, a weekly vzdump job backs up every VM, and Proxmox notifications reach the phone instead of an unread mailbox. Old snapshots and orphaned disks from a removed node were cleaned up, about 75 GB.
+* **Replaced an archived container updater.** Watchtower had been archived for almost a year and only worked because of a pinned Docker API version. It was swapped for the maintained fork after a dry run, and every weekly run now reports to Home Assistant, with a separate alert if a run goes missing. See `docker/architecture.md`.
+* **Found an automation that had been failing silently.** When HACS became Home Assistant's built in Marketplace, a missing entity made the weekly update check fail every Sunday with no visible error. Fixed, and alerts now stay open in Alert history until they are checked off by hand. See `haos/architecture.md`.
 * **Migrated from Open Source Puppet to OpenVox.** Stood up a new primary with OpenVoxDB and PuppetBoard, moved every managed node over, fixed a set of non obvious configuration gaps, then retired the old Puppet primary and PuppetDB hosts. See `openvox/migration.md`.
 * **Tightened certificate signing.** Autosign moved from a wildcard to an explicit allowlist of certnames.
 * **Root caused a full cluster reboot.** A NIC transmit ring hang on one node dropped corosync, and HA watchdog fencing rebooted every HA active node at once. Fixed the NIC, documented the failure chain, and changed how quorum margin is kept. See `proxmox/lessons-learned.md`.
@@ -59,8 +63,9 @@ Since the last snapshot the lab went through several large changes.
 ### proxmox/
 | Doc | Contents |
 |---|---|
-| cluster.md | Nodes, quorum, VM placement, NIC tuning, update timers |
+| cluster.md | Nodes, quorum, VM placement, HA rules, NIC tuning, patching, backups, alerts |
 | lessons-learned.md | Quorum, fencing, portability, and other lessons from real incidents |
+| pve9-upgrade.md | Proxmox VE 8 to 9 rolling upgrade: plan, problems, and the patching and alerting that came out of it |
 
 ### networking/
 | Doc | Contents |

@@ -61,7 +61,7 @@ The utility does not offer an Opower link, so monthly bills are entered by hand 
 
 ## Automations
 
-Every alert sends a phone notification and also saves an entry to an Alert history list. Entries are saved already checked off, so the list is a history and not a backlog, and a daily cleanup deletes anything older than 7 days.
+Every alert sends a phone notification and also saves an entry to an Alert history list. Entries stay open until they are checked off by hand, so the list works as a to do list of things that still need a look. A daily cleanup deletes checked off entries older than 7 days and never touches open ones.
 
 | Automation | Trigger | Action |
 |---|---|---|
@@ -74,6 +74,10 @@ Every alert sends a phone notification and also saves an entry to an Alert histo
 | Window open suggestion | Outdoor temp drops below indoor temp while cooling | Push |
 | NAS health alert | Synology SMART status change | Push |
 | Proxmox VM or node down | Alertmanager webhook | Push |
+| Proxmox notifications | Webhook from the Proxmox notification system (backups, package updates, fencing, replication) | Push; title marks warnings and errors as problems |
+| Monthly node updates | First Sunday of the month | Push, plus an open item to check off when the nodes are updated |
+| Watchtower report | Webhook after every weekly container update run | Push with scanned, updated and failed counts; flags any failure |
+| Watchtower missed run | Two hours after the weekly run, if no report arrived | Push, plus an open item |
 | Plex playback | Plex webhook events | Push |
 
 Plex webhooks arrive as multipart form data, so templates read `trigger.data.payload | from_json`.
@@ -84,11 +88,13 @@ HA updates itself on Sundays, after the Proxmox node updates and the VM reboot w
 
 | Order | Updates | Safety |
 |---|---|---|
-| 1 | HACS integrations and dashboard cards | Lists anything that failed; restarts HA only if an integration changed |
+| 1 | Marketplace (HACS) integrations and dashboard cards | Lists anything that failed; restarts HA only if an integration changed |
 | 2 | HA Core | Backup first; skips .0 releases and betas, so it waits for the first patch release |
 | 3 | HA OS | Backup first; skipped while a Core update is still running |
 
 Supervisor updates itself. Apps stay manual.
+
+Since HA 2026.11, HACS is the built in Marketplace and updates along with Core, so its old self update entity no longer exists. The weekly automation still listed it, and a state condition fails as a whole when any entity in its list is missing, so the automation had been skipping silently. The entity was removed from the list in November 2026.
 
 ## AI assisted administration
 
@@ -107,7 +113,7 @@ HAOS accepts traffic from NPM with forwarded headers and bans IPs after repeated
 
 | Project | Plan |
 |---|---|
-| Proxmox VE integration | Add reboot and VM state alerts once HACS downloads work again, then decide whether it replaces the Ping alerts |
+| Proxmox VE integration | Built in integration with read only monitoring plus power buttons for the media VM only, then decide whether it replaces the Ping alerts |
 | UPS monitoring | UPS data port to the main NAS, NAS UPS server, NUT in HA, rack power on the Utility page |
 | Z-Wave smart lock | Fingerprint scan on the doorbell, webhook to HAOS, unlock |
 | Z-Wave controller | USB stick on a Proxmox node, Z-Wave JS in Docker, connected to HAOS over TCP |

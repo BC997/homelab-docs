@@ -51,3 +51,27 @@ The old Gitea token was assumed to belong to one service. An audit showed two ot
 ## A VPN client can block LAN DNS on purpose
 
 A workstation could reach every lab host but could not resolve lab names. The VPN client's firewall had explicit rules dropping DNS to private address ranges, a leak protection that its LAN settings do not override. Lab names were moved into the workstation's hosts file instead of weakening the VPN. See `networking/workstation-dns.md`.
+
+## HA does not check whether a VM fits
+
+During the Proxmox 9 upgrade, HA sent an 8 core VM to a node with four CPU threads, and the VM sat in a start and fail loop. HA picks a node from its rules and priorities only. It checks neither CPU threads nor RAM. Rules for large VMs now list only the nodes that can run them, and the per node playbook stops those VMs instead of moving them when there is nowhere they fit.
+
+## A pinned version can hide end of life software
+
+The Docker host's update tool had been archived for almost a year and still looked healthy every week. It only worked because its compose file pinned an older Docker API version. The day Docker dropped that API, every container update would have stopped with no alert. A pin that keeps old software running is a deadline, so it gets written down next to the thing it is propping up.
+
+## A missing entity can switch off an automation without an error
+
+In Home Assistant, a state condition that lists several entities with `match: any` still fails as a whole if one of them no longer exists. When HACS became the built in Marketplace, its update entity disappeared and the weekly update automation quietly stopped installing anything. After a platform change, entity lists in conditions get rechecked, and HA's validation warnings on save are worth reading.
+
+## Removed nodes leave disks behind
+
+When a node leaves the cluster with VMs still assigned to it, their configs go with it, but their disks on shared storage stay. Nothing ever cleans them up because Proxmox no longer knows they exist. A storage audit against the list of current VMs found three of these, including the retired Puppet server.
+
+## cloud-init can run again on an old VM
+
+A restart after a memory change gave a VM a new cloud-init instance ID, so cloud-init ran its first boot steps again and regenerated the SSH host keys. The SSH warning that followed looked like a security problem. The new key was confirmed through the guest agent before it was trusted, and cloud-init is now disabled inside every VM after first boot.
+
+## Read the removal list
+
+Before every node upgrade, the dry run was checked for critical packages on the removal list. The same habit caught `apt autoremove` trying to remove `sudo` after the Ceph cleanup. Anything that removes packages on a hypervisor gets read line by line first.
