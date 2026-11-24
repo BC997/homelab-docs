@@ -91,6 +91,11 @@ Since the last snapshot the lab went through several large changes.
 |---|---|
 | architecture.md | Integrations, dashboard, energy breakdown, alerts, weekly updates, AI assisted administration, pending projects |
 
+### plex/
+| Doc | Contents |
+|---|---|
+| plex-watch.md | Remote buffering and error alerts to HA: what it ignores, likely cause logic, commands, tuning |
+
 ## Notes
 
 * IPs and domains are sanitized. Real values use a private range and a private domain.
