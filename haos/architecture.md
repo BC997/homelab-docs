@@ -65,7 +65,7 @@ Every alert sends a phone notification and also saves an entry to an Alert histo
 
 | Automation | Trigger | Action |
 |---|---|---|
-| Lab host unreachable or back online | A Ping sensor goes down or comes back (about 30 seconds) | Push, with downtime on recovery. Skips the nightly reboot window |
+| Lab host unreachable or back online | A Ping sensor goes down or comes back (about 30 seconds) | Push after 3 minutes down, with downtime on recovery. No skip windows: Patch Wednesday reboots finish in under 2 minutes, and a VM that doesn't come back still alerts |
 | OpenVox drift and failures | Webhook from the OpenVox primary | Push with the full report log. See `openvox/drift-alerts.md` |
 | Home Assistant back online | HA starts | Push, so a restart or host outage is visible afterward |
 | Car tire pressure low | Any tire below 38 psi for 10 minutes | Push |
@@ -76,15 +76,16 @@ Every alert sends a phone notification and also saves an entry to an Alert histo
 | Proxmox VM or node down | Alertmanager webhook | Push |
 | Proxmox notifications | Webhook from the Proxmox notification system (backups, package updates, fencing, replication) | Push; title marks warnings and errors as problems |
 | Monthly node updates | First Sunday of the month | Push, plus an open item to check off when the nodes are updated |
-| Watchtower report | Webhook after every weekly container update run | Push with scanned, updated and failed counts; flags any failure |
+| Watchtower report | Webhook after every weekly container update run | Push with scanned, updated and failed counts; flags any failure. The startup message is skipped during the Docker host's Wednesday patch slot |
 | Watchtower missed run | Two hours after the weekly run, if no report arrived | Push, plus an open item |
+| Container check | Webhook from the Docker host, once per boot, when an auto restart container is still down 15 minutes after boot | Push, plus an open item listing the containers that are down. See `openvox/patch-wednesday.md` |
 | Plex playback | Plex webhook events | Push |
 
 Plex webhooks arrive as multipart form data, so templates read `trigger.data.payload | from_json`.
 
 ## Weekly updates
 
-HA updates itself on Sundays, after the Proxmox node updates and the VM reboot window. Each run notifies before it starts, and nothing runs when no update is waiting.
+HA updates itself on Sundays, after the weekly container update. Proxmox node updates are monthly and done by hand. The VMs patch and reboot only if needed on Wednesday (see `openvox/patch-wednesday.md`). Each run notifies before it starts, and nothing runs when no update is waiting.
 
 | Order | Updates | Safety |
 |---|---|---|

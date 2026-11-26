@@ -41,7 +41,7 @@ Installed from the official deb, not the snap. Plex moved its repo with PMS 1.43
 * systemd override to restart on failure
 * QEMU guest agent through the base profile
 
-Nightly reboot behavior follows the fleet setting in `profile::base`, with a per node opt out in Hiera.
+No scheduled reboot. Patch Wednesday reboots plex-cli at 03:45 on Wednesday only if a reboot is pending (`profile::patch_reboot`, see `openvox/patch-wednesday.md`).
 
 ## External access
 

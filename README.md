@@ -28,7 +28,8 @@ Since the last snapshot the lab went through several large changes.
 * **Tightened certificate signing.** Autosign moved from a wildcard to an explicit allowlist of certnames.
 * **Root caused a full cluster reboot.** A NIC transmit ring hang on one node dropped corosync, and HA watchdog fencing rebooted every HA active node at once. Fixed the NIC, documented the failure chain, and changed how quorum margin is kept. See `proxmox/lessons-learned.md`.
 * **Shrank the cluster from five nodes to four.** Removed one node cleanly, moved its workloads, and repurposed the hardware as a standalone workstation.
-* **Standardized fleet behavior in code.** Pacific timezone, a Hiera controlled nightly reboot window with per node opt out, and aligned Proxmox update timers.
+* **Standardized fleet behavior in code.** Pacific timezone, a Hiera controlled weekly patch window, and aligned Proxmox update timers.
+* **Replaced nightly reboots with Patch Wednesday.** Weekly apt now runs Wednesday at 01:00, and each VM reboots in its own staggered slot only when a reboot is actually pending. A dpkg lock check keeps a reboot from landing in the middle of a package run, and a boot time check on the Docker host alerts if any auto restart container stays down. That check exists because a hard stop once left Prometheus down for 20 hours. See `openvox/patch-wednesday.md`.
 * **Made VMs portable.** HA managed VMs now use the shared bridge so they can move between nodes.
 * **Added services.** Seerr, Tautulli, and Bazarr as Puppet managed compose stacks, plus Vaultwarden and Cloudflare DDNS.
 * **Made the primary heal itself.** The hand applied OpenVoxDB and PuppetBoard fixes are now enforced by a profile. An upgrade that undoes one gets repaired on the next agent run. Tested by breaking a fix on purpose. See `openvox/puppetboard-fixes.md`.
@@ -59,6 +60,7 @@ Since the last snapshot the lab went through several large changes.
 | ca-and-agent-bootstrap.md | Autosign allowlist, onboarding, and cert cleanup |
 | eyaml-secrets.md | Keypair locations, encrypted files, encryption workflow |
 | drift-alerts.md | Phone alerts for failed runs and drift outside a deploy |
+| patch-wednesday.md | Weekly patch window: Wednesday apt, conditional VM reboots, Docker host container check, Prometheus reload rule, rollback |
 
 ### proxmox/
 | Doc | Contents |

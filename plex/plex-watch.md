@@ -55,7 +55,7 @@ Defaults, set as environment values the script reads: START_GRACE 15 s, SEEK_GRA
 
 ## HA side
 
-`automation.plex_stream_problem` skips planned windows: 05:00 to 05:25 daily (plex-cli reboot), Sunday 01:00 to 01:30 (weekly apt) and Sunday 02:15 to 03:15 (backup). It sends a phone notice and an open Alert history item.
+`automation.plex_stream_problem` skips planned windows: Wednesday 01:00 to 01:30 (weekly apt), Wednesday 03:45 to 04:00 (plex-cli Patch Wednesday reboot, see `openvox/patch-wednesday.md`) and Sunday 02:15 to 03:15 (backup). The old daily 05:00 window is gone. It sends a phone notice and an open Alert history item.
 
 ## Background
 
